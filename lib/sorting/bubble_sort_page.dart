@@ -9,11 +9,11 @@ class BubbleSortPage extends StatefulWidget {
 
 class _BubbleSortPageState extends State<BubbleSortPage> {
   var arr = [12, 5, 625, 12, 65, 756, 12, 76, 3, 23, 7, 8];
-  var bubbleIndex = <int>[];
+  var compareIndex = <int>[];
 
   void reset() {
     arr = [12, 5, 625, 12, 65, 756, 12, 76, 3, 23, 7, 8];
-    bubbleIndex = <int>[];
+    compareIndex = <int>[];
 
     setState(() {});
   }
@@ -21,27 +21,81 @@ class _BubbleSortPageState extends State<BubbleSortPage> {
   Future<void> bubbleSort() async {
     for (int i = 0; i < arr.length; i++) {
       for (int j = 0; j < arr.length - i - 1; j++) {
+        compareIndex = <int>[j, j + 1];
+
         if (arr[j] > arr[j + 1]) {
           int temp = arr[j];
           arr[j] = arr[j + 1];
           arr[j + 1] = temp;
-          bubbleIndex = <int>[j, j + 1];
-          setState(() {});
-          await Future.delayed(const Duration(milliseconds: 1200));
         }
+
+        setState(() {});
+        await Future.delayed(const Duration(milliseconds: 600));
       }
+    }
+  }
+
+  Future<void> selectionSort() async {
+    for (int i = 0; i < arr.length - 1; i++) {
+      for (int j = i + 1; j < arr.length; j++) {
+        compareIndex = <int>[i, j];
+
+        if (arr[j] < arr[i]) {
+          int temp = arr[j];
+          arr[j] = arr[i];
+          arr[i] = temp;
+        }
+
+        setState(() {});
+        await Future.delayed(const Duration(milliseconds: 1200));
+      }
+    }
+  }
+
+  Future<void> insertionSort() async {
+    late int key, j;
+    for (int i = 1; i < arr.length; i++) {
+      key = arr[i];
+      j = i - 1;
+
+      while (j >= 0 && arr[j] > key) {
+        compareIndex = <int>[i, j];
+
+        arr[j + 1] = arr[j];
+        j = j - 1;
+
+        setState(() {});
+        await Future.delayed(const Duration(milliseconds: 1200));
+      }
+
+      arr[j + 1] = key;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Buble Sort")),
+      appBar: AppBar(title: const Text("Sorting Page")),
       body: Column(
         children: [
-          TextButton(
-            onPressed: bubbleSort,
-            child: const Text("Sort"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: bubbleSort,
+                child: const Text("Bubble Sort"),
+              ),
+              const VerticalDivider(),
+              TextButton(
+                onPressed: selectionSort,
+                child: const Text("Selection Sort"),
+              ),
+              const VerticalDivider(),
+              TextButton(
+                onPressed: insertionSort,
+                child: const Text("Insertion Sort"),
+              ),
+            ],
           ),
           const SizedBox(height: 24),
           TextButton(
@@ -59,7 +113,7 @@ class _BubbleSortPageState extends State<BubbleSortPage> {
                       child: Text(
                         arr[i].toString(),
                         style: TextStyle(
-                          color: bubbleIndex.contains(i)
+                          color: compareIndex.contains(i)
                               ? Colors.red
                               : Colors.black,
                         ),
@@ -73,7 +127,7 @@ class _BubbleSortPageState extends State<BubbleSortPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              for (final item in bubbleIndex)
+              for (final item in compareIndex)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
