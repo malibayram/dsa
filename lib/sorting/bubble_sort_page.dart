@@ -47,7 +47,7 @@ class _BubbleSortPageState extends State<BubbleSortPage> {
         }
 
         setState(() {});
-        await Future.delayed(const Duration(milliseconds: 1200));
+        await Future.delayed(const Duration(milliseconds: 600));
       }
     }
   }
@@ -65,7 +65,7 @@ class _BubbleSortPageState extends State<BubbleSortPage> {
         j = j - 1;
 
         setState(() {});
-        await Future.delayed(const Duration(milliseconds: 1200));
+        await Future.delayed(const Duration(milliseconds: 600));
       }
 
       arr[j + 1] = key;
