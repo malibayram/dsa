@@ -1,13 +1,13 @@
 class QueueArray<T> {
+  QueueArray(final int capacity) {
+    _queue = List<T?>.filled(capacity, null);
+  }
+
   late final List<T?> _queue;
 
   int _front = -1;
   int _rear = -1;
   int _size = 0;
-
-  QueueArray(final int capacity) {
-    _queue = List<T?>.filled(capacity, null);
-  }
 
   bool isEmpty() {
     return _size == 0;
@@ -52,7 +52,7 @@ class QueueArray<T> {
     if (isEmpty()) {
       print('Queue is empty');
       return null;
-    }
+    } // [4, 4, 5, 8, null, null, 5, 5, 5, 7]
     T? value = _queue[_front];
     _queue[_front] = null;
     _front = (_front + 1) % _queue.length;
@@ -61,21 +61,28 @@ class QueueArray<T> {
   }
 
   void display() {
+    String result = '';
     if (isEmpty()) {
       print('Queue is empty');
       return;
-    } // [4, 5, null, null, null, null, 5, 5, 5, 7]
+    } // [4, 4, 5, 8, null, null, 5, 5, 5, 7]
     if (_front > _rear) {
       for (int i = _front; i < _queue.length; i++) {
-        print(_queue[i]);
+        result += "${_queue[i]}->";
       }
       for (int i = 0; i <= _rear; i++) {
-        print(_queue[i]);
+        result += "${_queue[i]!}->";
       }
     } else {
       for (int i = _front; i <= _rear; i++) {
-        print(_queue[i]);
+        result += "${_queue[i]!}->";
       }
     }
+    print(result);
+    result = '';
+    for (final item in _queue) {
+      result += "${item?.toString()}->";
+    }
+    print(result);
   }
 }
