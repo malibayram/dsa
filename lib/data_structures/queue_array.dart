@@ -9,34 +9,34 @@ class QueueArray<T> {
   int _rear = -1;
   int _size = 0;
 
-  bool isEmpty() {
+  bool get isEmpty {
     return _size == 0;
   }
 
-  bool isFull() {
+  bool get isFull {
     return _size == _queue.length;
   }
 
-  int size() {
+  int get size {
     return _size;
   }
 
   T? front() {
-    if (isEmpty()) {
+    if (isEmpty) {
       return null;
     }
     return _queue[_front];
   }
 
   T? rear() {
-    if (isEmpty()) {
+    if (isEmpty) {
       return null;
     }
     return _queue[_rear];
   }
 
   void enqueue(T value) {
-    if (isFull()) {
+    if (isFull) {
       print('Queue is full');
       return;
     }
@@ -49,7 +49,7 @@ class QueueArray<T> {
   }
 
   T? dequeue() {
-    if (isEmpty()) {
+    if (isEmpty) {
       print('Queue is empty');
       return null;
     } // [4, 4, 5, 8, null, null, 5, 5, 5, 7]
@@ -62,7 +62,7 @@ class QueueArray<T> {
 
   void display() {
     String result = '';
-    if (isEmpty()) {
+    if (isEmpty) {
       print('Queue is empty');
       return;
     } // [4, 4, 5, 8, null, null, 5, 5, 5, 7]
