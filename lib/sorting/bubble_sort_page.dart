@@ -10,10 +10,12 @@ class BubbleSortPage extends StatefulWidget {
 class _BubbleSortPageState extends State<BubbleSortPage> {
   var arr = [12, 5, 625, 12, 65, 756, 12, 76, 3, 23, 7, 8];
   var compareIndex = <int>[];
+  bool sorted = false;
 
   void reset() {
     arr = [12, 5, 625, 12, 65, 756, 12, 76, 3, 23, 7, 8];
     compareIndex = <int>[];
+    sorted = false;
 
     setState(() {});
   }
@@ -33,6 +35,8 @@ class _BubbleSortPageState extends State<BubbleSortPage> {
         await Future.delayed(const Duration(milliseconds: 600));
       }
     }
+    sorted = true;
+    setState(() {});
   }
 
   Future<void> selectionSort() async {
@@ -50,6 +54,8 @@ class _BubbleSortPageState extends State<BubbleSortPage> {
         await Future.delayed(const Duration(milliseconds: 600));
       }
     }
+    sorted = true;
+    setState(() {});
   }
 
   Future<void> insertionSort() async {
@@ -70,6 +76,8 @@ class _BubbleSortPageState extends State<BubbleSortPage> {
 
       arr[j + 1] = key;
     }
+    sorted = true;
+    setState(() {});
   }
 
   @override
@@ -139,6 +147,7 @@ class _BubbleSortPageState extends State<BubbleSortPage> {
                 ),
             ],
           ),
+          if (sorted) const Text("Sorted"),
         ],
       ),
     );
