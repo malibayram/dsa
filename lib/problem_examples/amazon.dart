@@ -13,6 +13,64 @@ Example:
     => 350
 */
 
+class Stream {
+  const Stream(this.name, this.startTime, this.endTime, this.bandwidth);
+
+  final String name;
+  final DateTime startTime;
+  final DateTime endTime;
+  final int bandwidth;
+}
+
+int findPeakBandwidth(List<Stream> streams) {
+  // O(n log n) + (O(n) * O(n)) => O(n^2)
+  streams.sort((a, b) => a.startTime.compareTo(b.startTime)); //  O(n log n)
+
+  int queueBandwidth = 0;
+  int peakBandwidth = 0;
+
+  final queue = <Stream>[];
+
+  for (int i = 0; i < streams.length; i++) {
+    // O(n)
+    final stream = streams[i];
+
+    if (queue.isEmpty) {
+      queue.add(stream);
+      continue;
+    }
+
+    while (queue.isNotEmpty && stream.startTime.isAfter(queue.first.endTime)) {
+      // O(n)
+      queue.removeAt(0);
+    }
+
+    queue.add(stream);
+
+    queueBandwidth = queue.fold(0, (p, e) => p + e.bandwidth);
+
+    if (queueBandwidth > peakBandwidth) {
+      peakBandwidth = queueBandwidth;
+    }
+  }
+
+  return peakBandwidth;
+}
+
+void main(List<String> args) {
+  final streams = [
+    Stream('A', DateTime(2022, 1, 1, 10), DateTime(2022, 1, 1, 11), 100),
+    Stream('B', DateTime(2022, 1, 1, 10, 30), DateTime(2022, 1, 1, 12), 200),
+    Stream('C', DateTime(2022, 1, 1, 12), DateTime(2022, 1, 1, 13), 150),
+    Stream('D', DateTime(2022, 1, 1, 12), DateTime(2022, 1, 1, 13), 250),
+    Stream('E', DateTime(2022, 1, 1, 11), DateTime(2022, 1, 1, 12), 50),
+    Stream('F', DateTime(2022, 1, 1, 14), DateTime(2022, 1, 1, 15), 350),
+    Stream('G', DateTime(2022, 1, 1, 14, 30), DateTime(2022, 1, 1, 15), 150),
+  ];
+
+  final peak = findPeakBandwidth(streams);
+  print(peak);
+}
 /*
 C B A
 */
@@ -20,21 +78,6 @@ C B A
 // Dart
 
 // I find
-
-void main(List<String> args) {
-  final streams = [
-    Call('A', DateTime(2022, 1, 1, 10), DateTime(2022, 1, 1, 11), 100),
-    Call('C', DateTime(2022, 1, 1, 12), DateTime(2022, 1, 1, 13), 150),
-    Call('D', DateTime(2022, 1, 1, 12), DateTime(2022, 1, 1, 13), 250),
-    Call('E', DateTime(2022, 1, 1, 11), DateTime(2022, 1, 1, 12), 50),
-    Call('F', DateTime(2022, 1, 1, 14), DateTime(2022, 1, 1, 15), 350),
-    Call('B', DateTime(2022, 1, 1, 10, 30), DateTime(2022, 1, 1, 12, 30), 200),
-    Call('G', DateTime(2022, 1, 1, 14, 30), DateTime(2022, 1, 1, 15), 150),
-  ];
-
-  final peak = findPeakTotalBitrate(streams);
-  print(peak.map((e) => {e.streamName: e.bandwidth}));
-}
 
 class Call {
   final String streamName;
