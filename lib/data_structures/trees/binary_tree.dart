@@ -47,6 +47,43 @@ class BinaryTree<T extends Comparable> {
     return null;
   }
 
+  void _addTreeToTree(BinaryTreeNode<T>? node, BinaryTreeNode<T> treeNode) {
+    if (node == null) {
+      return;
+    }
+
+    _addRecursive(treeNode, node.data);
+
+    _addTreeToTree(node.left, treeNode);
+    _addTreeToTree(node.right, treeNode);
+  }
+
+  BinaryTreeNode<T>? remove(T value) {
+    var current = root;
+
+    while (current != null) {
+      if (current.data == value) {
+        if (current.right != null) {
+          var temp = current.right!.left;
+          current.right!.left = current.left;
+          if (current.right!.right == null) {
+            current.right!.right = temp;
+          } else {
+            _addTreeToTree(temp, current.right!.right!);
+          }
+        } else if (current.left != null) {
+          current.right = current.left;
+        }
+        return current;
+      } else if (current.data.compareTo(value) > 0) {
+        current = current.left;
+      } else {
+        current = current.right;
+      }
+    }
+    return null;
+  }
+
   /*
   --- Function Call Stack ---
 
@@ -136,8 +173,8 @@ class BinaryTree<T extends Comparable> {
       7
 """;
 
-    print(pen(treeDiagram));
-    print(diagram);
+    // print(pen(treeDiagram));
+    // print(diagram);
   }
 
   void printBinaryTree(BinaryTreeNode<T>? node) {
@@ -148,13 +185,13 @@ class BinaryTree<T extends Comparable> {
     final pen = AnsiPen()..yellow(bold: true);
 
     if (node.left != null) {
-      // print(pen('${node.data} <- ${node.left!.data}'));
-      print(pen('${node.left!.data}'));
+      print("${pen('${node.data}')} <- ${pen('${node.left!.data}')}");
+      // print(pen('${node.left!.data}'));
     }
 
     if (node.right != null) {
-      // print(pen('${node.data} -> ${node.right!.data}'));
-      print(pen('${node.right!.data}'));
+      print("${pen('${node.data}')} -> ${pen('${node.right!.data}')}");
+      // print(pen('${node.right!.data}'));
     }
 
     printBinaryTree(node.left);
@@ -163,30 +200,18 @@ class BinaryTree<T extends Comparable> {
   }
 }
 
+/* 
+ */
+
 void main() {
-  final list = [
-    100,
-    50,
-    25,
-    75,
-    200,
-    350,
-    150,
-    175,
-    125,
-    110,
-    115,
-    120,
-    130,
-    140,
-    150,
-    155,
-  ];
+  final list = [150, 200, 100, 115, 175, 125, 25, 50, 75, 350, 110];
   final binaryTree = BinaryTree<int>();
 
   for (final item in list) {
     binaryTree.add(item);
   }
 
-  binaryTree.levelOrderTraversal();
+  binaryTree.remove(175);
+
+  binaryTree.printBinaryTree(binaryTree.root);
 }
