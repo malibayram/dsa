@@ -58,12 +58,33 @@ class BinaryTree<T extends Comparable> {
     _addTreeToTree(node.right, treeNode);
   }
 
-  BinaryTreeNode<T>? remove(T value) {
+  void _removeItemFromTree(BinaryTreeNode<T>? node, T value) {
+    if (node == null) {
+      return;
+    }
+
+    if (node.data.compareTo(value) > 0) {
+      if (node.left?.data == value) {
+        node.left = null;
+      } else {
+        _removeItemFromTree(node.left, value);
+      }
+    } else if (node.data.compareTo(value) < 0) {
+      if (node.right?.data == value) {
+        node.right = null;
+      } else {
+        _removeItemFromTree(node.right, value);
+      }
+    }
+  }
+
+  void remove(T value) {
     var current = root;
 
     while (current != null) {
       if (current.data == value) {
-        if (current.right != null) {
+        current = null;
+        /* if (current.right != null) {
           var temp = current.right!.left;
           current.right!.left = current.left;
           if (current.right!.right == null) {
@@ -73,15 +94,13 @@ class BinaryTree<T extends Comparable> {
           }
         } else if (current.left != null) {
           current.right = current.left;
-        }
-        return current;
+        } */
       } else if (current.data.compareTo(value) > 0) {
         current = current.left;
       } else {
         current = current.right;
       }
     }
-    return null;
   }
 
   /*
