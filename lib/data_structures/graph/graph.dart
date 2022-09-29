@@ -3,6 +3,14 @@ class Vertex<T> {
 
   final T data;
   final int index;
+
+  @override
+  operator ==(Object other) => other is Vertex<T> && other.data == data;
+
+  @override
+  int get hashCode {
+    return data.hashCode;
+  }
 }
 
 class Edge<T, W> {
@@ -11,11 +19,26 @@ class Edge<T, W> {
   final Vertex<T> source;
   final Vertex<T> destination;
   final W? weight;
+
+  @override
+  operator ==(Object other) {
+    return other is Edge<T, W> &&
+        other.source.data == source.data &&
+        other.destination.data == destination.data &&
+        other.weight == weight;
+  }
+
+  @override
+  int get hashCode {
+    return source.data.hashCode + destination.data.hashCode + weight.hashCode;
+  }
 }
 
 abstract class Graph<T, W> {
   Vertex<T> createVertex(T data);
   void addEdge(Vertex<T> source, Vertex<T> destination, [W? weight]);
+  void updateEdge(Edge<T, W> edge);
+  void removeVertex(Vertex<T> vertex);
   void displayGraph();
 }
 
@@ -59,6 +82,19 @@ class AdjacencyList<T, W> implements Graph<T, W> {
       }
       print(output);
     }
+  }
+
+  @override
+  void removeVertex(Vertex<T> vertex) {
+    _vertices.remove(vertex);
+    for (final v in _vertices.keys) {
+      _vertices[v]!.removeWhere((e) => e.destination.data == vertex.data);
+    }
+  }
+
+  @override
+  void updateEdge(Edge<T, W> edge) {
+    // TODO: implement updateEdge
   }
 }
 
@@ -112,6 +148,23 @@ class AdjacencyMatrix<T, W> implements Graph<T, W> {
       print(row);
     }
   }
+
+  @override
+  void removeVertex(Vertex<T> vertex) {
+    final v = vertices.indexOf(vertex);
+    vertices.removeAt(v);
+    weights.removeAt(v);
+
+    _nextIndex--;
+    for (var i = 0; i < _nextIndex; i++) {
+      weights[i].removeAt(v);
+    }
+  }
+
+  @override
+  void updateEdge(Edge<T, W> edge) {
+    // TODO: implement updateEdge
+  }
 }
 
 final isteklerR = [];
@@ -153,7 +206,7 @@ final arkadasliklar = [
 ];
 
 void main() {
-  final diyarIlceler = AdjacencyList<String, int>(directed: true);
+  final diyarIlceler = AdjacencyMatrix<String, int>(directed: true);
 
   final ilce1 = diyarIlceler.createVertex('Bismil');
   final ilce2 = diyarIlceler.createVertex('Ergani');
@@ -165,6 +218,12 @@ void main() {
   diyarIlceler.addEdge(ilce2, ilce3, 160);
   diyarIlceler.addEdge(ilce3, ilce4, 70);
   diyarIlceler.addEdge(ilce1, ilce4, 100);
+
+  diyarIlceler.displayGraph();
+
+  print('\n');
+
+  diyarIlceler.removeVertex(ilce4);
 
   diyarIlceler.displayGraph();
 }
