@@ -40,7 +40,20 @@ abstract class Graph<T, W> {
   void updateEdge(Edge<T, W> edge);
   void removeVertex(Vertex<T> vertex);
   void displayGraph();
+  void dfs(Vertex<T> vertex);
 }
+
+/*
+
+Basic Operations on Graphs
+Below are the basic operations on the graph:
+
+- Insertion of Nodes/Edges in the graph – Insert a node into the graph.
+- Deletion of Nodes/Edges in the graph – Delete a node from the graph.
+Searching on Graphs – Search an entity in the graph.
+Traversal of Graphs – Traversing all the nodes in the graph.
+ 
+*/
 
 class AdjacencyList<T, W> implements Graph<T, W> {
   AdjacencyList({this.directed = false});
@@ -95,6 +108,11 @@ class AdjacencyList<T, W> implements Graph<T, W> {
   @override
   void updateEdge(Edge<T, W> edge) {
     // TODO: implement updateEdge
+  }
+
+  @override
+  void dfs(Vertex<T> vertex) {
+    // TODO: implement dfs
   }
 }
 
@@ -165,6 +183,26 @@ class AdjacencyMatrix<T, W> implements Graph<T, W> {
   void updateEdge(Edge<T, W> edge) {
     // TODO: implement updateEdge
   }
+
+  final visited = <T>[];
+  int routeLength = 0;
+
+  @override
+  void dfs(Vertex<T> vertex) {
+    for (int i = 0; i < weights.length; i++) {
+      if (weights[vertex.index][i] != null &&
+          !visited.contains(vertices[i].data)) {
+        routeLength += weights[vertex.index][i] as int;
+        print(
+            "vertex.data: ${vertex.data} -> ${vertices[i].data} : $routeLength");
+        visited.add(vertex.data);
+        if (i == vertex.index) {
+          continue;
+        }
+        dfs(vertices[i]);
+      }
+    }
+  }
 }
 
 final isteklerR = [];
@@ -206,7 +244,7 @@ final arkadasliklar = [
 ];
 
 void main() {
-  final diyarIlceler = AdjacencyMatrix<String, int>(directed: true);
+  final diyarIlceler = AdjacencyMatrix<String, int>(directed: false);
 
   final ilce1 = diyarIlceler.createVertex('Bismil');
   final ilce2 = diyarIlceler.createVertex('Ergani');
@@ -214,12 +252,12 @@ void main() {
   final ilce4 = diyarIlceler.createVertex('Hani');
 
   diyarIlceler.addEdge(ilce1, ilce2, 110);
-  diyarIlceler.addEdge(ilce2, ilce1, 130);
   diyarIlceler.addEdge(ilce2, ilce3, 160);
   diyarIlceler.addEdge(ilce3, ilce4, 70);
   diyarIlceler.addEdge(ilce1, ilce4, 100);
 
   diyarIlceler.displayGraph();
+  diyarIlceler.dfs(ilce4);
 
   print('\n');
 
